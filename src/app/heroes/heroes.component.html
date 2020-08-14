@@ -21,13 +21,6 @@
     </li>
 </ul>
 
+<app-hero-detail [hero]="selectHero">
 
-<!-- 添加鼠标点击时间触发的英雄详情 -->
-<div *ngIf="selectHero">
-    <h2>
-        {{selectHero.name | uppercase}} Details
-    </h2>
-    <label>name:
-        <input [(ngModel)]="selectHero.name" placeholder="name" />
-    </label>
-</div>
+</app-hero-detail>
