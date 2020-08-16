@@ -24,7 +24,7 @@ export class HeroesComponent implements OnInit {
   // 暴露 HEROES 数组
   heros = HEROES;
 
-  selectHero : Hero;
+  selectHero: Hero;
 
   constructor() { }
   /* ngOnInit() 是一个生命周期钩子，Angular 在创建完组件后很快就会调用 ngOnInit()。这里是放置初始化逻辑的好地方。 */
@@ -32,7 +32,7 @@ export class HeroesComponent implements OnInit {
   }
 
 
-  onSelect(hero : Hero){
+  onSelect(hero: Hero) {
     this.selectHero = hero;
   }
 
