@@ -17,15 +17,8 @@ CLI 自动生成了三个元数据属性：
 })
 /* 始终要 export 这个组件类，以便在其它地方（比如 AppModule）导入它。 */
 export class HeroesComponent implements OnInit {
-
-  hero: Hero = {
-    id: 1,
-    name: 'Windstorm'
-  };
   // 暴露 HEROES 数组
   heros: Hero[];
-
-  selectHero: Hero;
 
   constructor(
     // 注入 HeroService 服务
@@ -35,12 +28,6 @@ export class HeroesComponent implements OnInit {
   /* ngOnInit() 是一个生命周期钩子，Angular 在创建完组件后很快就会调用 ngOnInit()。这里是放置初始化逻辑的好地方。 */
   ngOnInit(): void {
     this.getHeroes();
-  }
-
-
-  onSelect(hero: Hero) {
-    this.selectHero = hero;
-    this.messageService.add('HeroesComponent: Selected hero id=${hero.id}');
   }
 
   getHeroes(): void {

@@ -1,10 +1,3 @@
-<h2>{{hero.name}} Details </h2>
-
-<div>
-    <label>
-        <input [(ngModel)]="hero.name" placeholder="name" />
-    </label>
-</div>
 <!--  ngModel 根据领域对象创建一个 FormControl 实例，并把它绑定到一个表单控件元素上。
 这个 FormControl 实例将会跟踪值、用户交互和控件的验证状态，以保持视图与模型的同步。 如果用在某个父表单中，该指令还会把自己注册为这个父表单的子控件。
 这个指令可以单独使用，也可以用作一个大表单的一部分。你所要做的一切就是用 ngModel 选择器来激活它。
@@ -16,11 +9,9 @@
 -->
 
 <ul class="heroes">
-    <li *ngFor="let hero of heros" (click)="onSelect(hero)" [class.selected]="hero===selectHero">
-        <span class="badge">{{hero.id}}</span> {{hero.name}}
+    <li *ngFor="let hero of heros">
+        <a routerLink="/detail/{{hero.id}}">
+         <span class="badge">{{hero.id}}</span> {{hero.name}}
+        </a>
     </li>
 </ul>
-
-<app-hero-detail [hero]="selectHero">
-
-</app-hero-detail>
