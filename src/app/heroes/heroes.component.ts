@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
+import { MessageService } from '../message.service';
 
 /* 你要从 Angular 核心库中导入 Component 符号，并为组件类加上 @Component 装饰器。
 @Component 是个装饰器函数，用于为该组件指定 Angular 所需的元数据。
@@ -27,7 +28,9 @@ export class HeroesComponent implements OnInit {
   selectHero: Hero;
 
   constructor(
-    private heroService: HeroService
+    // 注入 HeroService 服务
+    private heroService: HeroService,
+    private messageService: MessageService
   ) { }
   /* ngOnInit() 是一个生命周期钩子，Angular 在创建完组件后很快就会调用 ngOnInit()。这里是放置初始化逻辑的好地方。 */
   ngOnInit(): void {
@@ -37,9 +40,17 @@ export class HeroesComponent implements OnInit {
 
   onSelect(hero: Hero) {
     this.selectHero = hero;
+    this.messageService.add('HeroesComponent: Selected hero id=${hero.id}');
   }
 
   getHeroes(): void {
-    this.heros = this.heroService.getHeroes();
+    // 上一个版本把英雄的数组赋值给了该组件的 heroes 属性。 这种赋值是同步的，这里包含的假设是服务器能立即返回英雄数组或者浏览器能在等待服务器响应时冻结界面。
+    // 当 HeroService 真的向远端服务器发起请求时，这种方式就行不通了。
+    // (同步) this.heroes = this.heroService.getHeroes();
+
+    // 在 HeroesComponent 中订阅
+    // 新的版本等待 Observable 发出这个英雄数组，这可能立即发生，也可能会在几分钟之后。 然后，subscribe() 方法把这个英雄数组传给这个回调函数，该函数把英雄数组赋值给组件的 heroes 属性。
+    // 使用这种(异步)方式，当 HeroService 从远端服务器获取英雄数据时，就可以工作了。
+    this.heroService.getHeroes().subscribe(heroes => this.heros = heroes);
   }
 }
