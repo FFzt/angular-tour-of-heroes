@@ -40,4 +40,10 @@ export class HeroesComponent implements OnInit {
     // 使用这种(异步)方式，当 HeroService 从远端服务器获取英雄数据时，就可以工作了。
     this.heroService.getHeroes().subscribe(heroes => this.heros = heroes);
   }
+
+  delete(hero: Hero):void{
+    // 过滤器会创建一个新的数组，原数组不会改变
+    this.heros = this.heros.filter(h=>h!==hero);
+    this.heroService.deleteHero(hero).subscribe();
+  }
 }

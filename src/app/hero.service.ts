@@ -32,8 +32,8 @@ export class HeroService {
     // 使用 pipe() 方法来扩展 Observable 的结果，并给它一个 catchError() 操作符
     // catchError() 操作符会拦截失败的 Observable。 它把错误对象传给错误处理器，错误处理器会处理这个错误。
     return this.http.get<Hero[]>(this.heroesUrl).pipe(
-      tap( _ => this.log('fetched heroes')),
-      catchError(this.handleError<Hero[]>('getHeroes',[]))
+      tap(_ => this.log('fetched heroes')),
+      catchError(this.handleError<Hero[]>('getHeroes', []))
     );
   }
 
@@ -48,9 +48,9 @@ export class HeroService {
   }
 
 
-  updateHero(hero: Hero):Observable<any>{
-    return this.http.put(this.heroesUrl,hero,this.httpOptions).pipe(
-      tap(_=>this.log(`updated hero id=${hero.id}`)),
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap(_ => this.log(`updated hero id=${hero.id}`)),
       catchError(this.handleError<any>('updateHero'))
     );
   }
@@ -65,18 +65,37 @@ export class HeroService {
   // 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-  
+
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
-  
+
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);
-  
+
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }
+  // 函数参数 可以是两种类型
+  public deleteHero(hero: Hero | number): Observable<Hero> {
+    const id = typeof hero === 'number' ? hero : hero.id;
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.delete<Hero>(url,this.httpOptions).pipe(
+      tap(_ => this.log(`deleted hero id=${id}`)),
+      catchError(this.handleError<Hero>('deleteHero'))
+    );
+  }
 
-
-
+  public searchHeroes(term: string):Observable<Hero[]>{
+    if (!term.trim()) {
+      // if not search term, return empty hero array.
+      return of([]);
+    }
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+      tap(x=>x.length?
+        this.log(`found heroes matching "${term}"`) :
+        this.log(`no heroes matching "${term}"`)),
+        catchError(this.handleError<Hero[]>('searchHeroes', []))
+        );
+  }
 }
